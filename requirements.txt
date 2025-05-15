@@ -1,0 +1,8 @@
+google-generativeai
+requests
+pyaudio
+vosk
+piper-tts
+mediapipe
+opencv-python
+# Add other dependencies as needed during development
