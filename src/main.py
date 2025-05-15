@@ -1,14 +1,14 @@
 import time
 import os
 import threading
-from . import config
-from .audio_input import AudioInput
-from .stt_module import STTModule
-from .llm_module import get_llm_response
-from .tts_module import TTSModule
-from .audio_output import AudioOutput
-from .video_input import VideoInput
-from .vision_module import VisionModule
+import config
+from audio_input import AudioInput
+from stt_module import STTModule
+from llm_module import get_llm_response
+from tts_module import TTSModule
+from audio_output import AudioOutput
+from video_input import VideoInput
+from vision_module import VisionModule
 
 # Global state
 current_language = config.DEFAULT_LANGUAGE

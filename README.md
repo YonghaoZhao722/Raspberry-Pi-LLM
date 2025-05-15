@@ -13,7 +13,7 @@
 
 ## 系统架构
 
-详细的系统架构和交互流程请参阅 [系统架构与交互流程设计](system_architecture_and_interaction_flow.md)。
+详细的系统架构和交互流程请参阅 [系统架构与交互流程设计](docs/system_architecture_and_interaction_flow.md)。
 
 系统由以下核心模块组成：
 
@@ -109,13 +109,13 @@ cp models/piper/zh_CN-huayan-medium/zh_CN-huayan-medium.onnx.json models/piper/
 
 ### 5. 配置 API 密钥
 
-从 `config_example.py` 创建您的 `config.py` 文件：
+从 `src/config_example.py` 创建您的 `src/config.py` 文件：
 
 ```bash
-cp config_example.py config.py
+cp src/config_example.py src/config.py
 ```
 
-然后编辑 `config.py` 文件，设置您的 Gemini API 密钥：
+然后编辑 `src/config.py` 文件，设置您的 Gemini API 密钥：
 
 ```python
 # 将此行替换为您的实际API密钥
@@ -127,7 +127,7 @@ GEMINI_API_KEY = "YOUR_ACTUAL_GEMINI_API_KEY"
 ### 6. 运行助手
 
 ```bash
-python3 main.py
+python3 start.py
 ```
 
 ## 使用方法
@@ -141,18 +141,53 @@ python3 main.py
 ## 项目结构
 
 ```
-├── main.py                  # 主程序入口
-├── config_example.py        # 配置文件示例
-├── requirements.txt         # 依赖列表
-├── audio_input.py           # 音频输入模块
-├── audio_output.py          # 音频输出模块
-├── stt_module.py            # 语音转文本模块
-├── tts_module.py            # 文本转语音模块
-├── video_input.py           # 视频输入模块
-├── vision_module.py         # 视觉处理模块
-├── llm_module.py            # 大语言模型交互模块
-└── system_architecture_and_interaction_flow.md  # 系统架构文档
+├── start.py                  # 主入口点启动脚本
+├── requirements.txt          # 依赖列表
+├── models/                   # 模型目录
+│   ├── vosk/                 # Vosk 语音识别模型目录
+│   └── piper/                # Piper 语音合成模型目录
+├── src/                      # 源代码目录
+│   ├── __init__.py           # 包初始化文件
+│   ├── main.py               # 主程序入口
+│   ├── config_example.py     # 配置文件示例
+│   ├── audio_input.py        # 音频输入模块
+│   ├── audio_output.py       # 音频输出模块
+│   ├── stt_module.py         # 语音转文本模块
+│   ├── tts_module.py         # 文本转语音模块
+│   ├── video_input.py        # 视频输入模块
+│   ├── vision_module.py      # 视觉处理模块
+│   └── llm_module.py         # 大语言模型交互模块
+└── docs/                     # 文档目录
+    ├── system_architecture_and_interaction_flow.md  # 系统架构文档
+    ├── multimodal_assistant_deployment_guide.md     # 部署指南
+    ├── tech_selection_summary.md                    # 技术选型总结
+    └── todo.md                                      # 待办事项
 ```
+
+## 故障排除
+
+### 常见问题
+
+1. **语音识别不工作**
+   - 检查麦克风是否正确连接和配置
+   - 验证 Vosk 模型是否已正确下载并设置正确路径
+
+2. **语音合成不工作**
+   - 检查扬声器是否正确连接和配置
+   - 验证 Piper 模型是否已正确下载并设置正确路径
+
+3. **视觉识别不工作**
+   - 检查摄像头是否正确连接和配置
+   - 尝试重新启动程序
+
+4. **API 调用失败**
+   - 检查网络连接
+   - 验证 Gemini API 密钥是否正确
+
+### 日志检查
+
+如需更详细的调试信息，可以在 `src/config.py` 中将 `LOG_LEVEL` 设置为 "DEBUG"。
+
 ## 许可证
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件。
