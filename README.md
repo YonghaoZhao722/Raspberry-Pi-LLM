@@ -13,7 +13,7 @@
 
 ## 系统架构
 
-![系统架构](https://raw.githubusercontent.com/YonghaoZhao722/Raspberry-Pi-LLM/main/docs/images/system_architecture.png)
+详细的系统架构和交互流程请参阅 [系统架构与交互流程设计](system_architecture_and_interaction_flow.md)。
 
 系统由以下核心模块组成：
 
@@ -62,37 +62,72 @@ cd Raspberry-Pi-LLM
 
 ```bash
 python3 -m venv venv
-source venv/bin/activate
-pip3 install -r multimodal_assistant/requirements.txt
+source venv/bin/activate  # Linux/Mac
+# 或 .\venv\Scripts\activate  # Windows
+pip3 install -r requirements.txt
 ```
 
-### 4. 配置 API 密钥和模型
+### 4. 下载并配置必要的模型
 
-编辑 `multimodal_assistant/config.py` 文件，设置您的 Gemini API 密钥和模型路径：
+#### 创建模型目录
+
+```bash
+mkdir -p models/vosk models/piper
+```
+
+#### 下载 Vosk 模型
+
+```bash
+# 下载英文模型
+wget https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip
+unzip vosk-model-small-en-us-0.15.zip -d models/vosk/
+mv models/vosk/vosk-model-small-en-us-0.15 models/vosk/vosk-model-small-en-us-0.15
+
+# 下载中文模型
+wget https://alphacephei.com/vosk/models/vosk-model-small-cn-0.22.zip
+unzip vosk-model-small-cn-0.22.zip -d models/vosk/
+mv models/vosk/vosk-model-small-cn-0.22 models/vosk/vosk-model-small-cn-0.22
+```
+
+#### 下载 Piper 模型
+
+```bash
+# 下载英文模型
+wget https://github.com/rhasspy/piper/releases/download/v1.2.0/voice-en_US-lessac-medium.tar.gz
+mkdir -p models/piper/en_US-lessac-medium
+tar -xvzf voice-en_US-lessac-medium.tar.gz -C models/piper/en_US-lessac-medium
+cp models/piper/en_US-lessac-medium/en_US-lessac-medium.onnx models/piper/
+cp models/piper/en_US-lessac-medium/en_US-lessac-medium.onnx.json models/piper/
+
+# 下载中文模型
+wget https://github.com/rhasspy/piper/releases/download/v1.2.0/voice-zh_CN-huayan-medium.tar.gz
+mkdir -p models/piper/zh_CN-huayan-medium
+tar -xvzf voice-zh_CN-huayan-medium.tar.gz -C models/piper/zh_CN-huayan-medium
+cp models/piper/zh_CN-huayan-medium/zh_CN-huayan-medium.onnx models/piper/
+cp models/piper/zh_CN-huayan-medium/zh_CN-huayan-medium.onnx.json models/piper/
+```
+
+### 5. 配置 API 密钥
+
+从 `config_example.py` 创建您的 `config.py` 文件：
+
+```bash
+cp config_example.py config.py
+```
+
+然后编辑 `config.py` 文件，设置您的 Gemini API 密钥：
 
 ```python
-# Gemini API Configuration
-GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"
-GEMINI_MODEL_NAME = "gemini-2.0-flash"
-
-# 设置 Vosk 和 Piper 模型路径
-VOSK_MODEL_PATH_EN = "/path/to/vosk-model-small-en-us-0.15"
-VOSK_MODEL_PATH_ZH = "/path/to/vosk-model-small-cn-0.22"
-PIPER_MODEL_PATH_EN = "/path/to/en_US-lessac-medium.onnx"
-PIPER_CONFIG_PATH_EN = "/path/to/en_US-lessac-medium.onnx.json"
-PIPER_MODEL_PATH_ZH = "/path/to/zh_CN-huayan-medium.onnx"
-PIPER_CONFIG_PATH_ZH = "/path/to/zh_CN-huayan-medium.onnx.json"
+# 将此行替换为您的实际API密钥
+GEMINI_API_KEY = "YOUR_ACTUAL_GEMINI_API_KEY"
 ```
 
-### 5. 下载必要的模型
-
-- Vosk 模型：从 [Vosk Models](https://alphacephei.com/vosk/models) 下载
-- Piper 模型：从 [Piper Samples](https://rhasspy.github.io/piper-samples/) 下载
+您可以从 [Google AI Studio](https://ai.google.dev/) 获取 Gemini API 密钥。
 
 ### 6. 运行助手
 
 ```bash
-python3 -m multimodal_assistant.main
+python3 main.py
 ```
 
 ## 使用方法
@@ -106,22 +141,42 @@ python3 -m multimodal_assistant.main
 ## 项目结构
 
 ```
-multimodal_assistant/
-├── main.py              # 主程序入口
-├── config.py            # 配置文件
-├── requirements.txt     # 依赖列表
-├── audio_input.py       # 音频输入模块
-├── stt_module.py        # 语音转文本模块
-├── video_input.py       # 视频输入模块
-├── vision_module.py     # 视觉处理模块
-├── llm_module.py        # 大语言模型交互模块
-├── tts_module.py        # 文本转语音模块
-└── audio_output.py      # 音频输出模块
+├── main.py                  # 主程序入口
+├── config_example.py        # 配置文件示例
+├── requirements.txt         # 依赖列表
+├── audio_input.py           # 音频输入模块
+├── audio_output.py          # 音频输出模块
+├── stt_module.py            # 语音转文本模块
+├── tts_module.py            # 文本转语音模块
+├── video_input.py           # 视频输入模块
+├── vision_module.py         # 视觉处理模块
+├── llm_module.py            # 大语言模型交互模块
+└── system_architecture_and_interaction_flow.md  # 系统架构文档
 ```
 
 ## 故障排除
 
-常见问题及解决方案请参考 [部署指南](docs/multimodal_assistant_deployment_guide.md)。
+### 常见问题
+
+1. **语音识别不工作**
+   - 检查麦克风是否正确连接和配置
+   - 验证 Vosk 模型是否已正确下载并设置正确路径
+
+2. **语音合成不工作**
+   - 检查扬声器是否正确连接和配置
+   - 验证 Piper 模型是否已正确下载并设置正确路径
+
+3. **视觉识别不工作**
+   - 检查摄像头是否正确连接和配置
+   - 尝试重新启动程序
+
+4. **API 调用失败**
+   - 检查网络连接
+   - 验证 Gemini API 密钥是否正确
+
+### 日志检查
+
+如需更详细的调试信息，可以在 `config.py` 中将 `LOG_LEVEL` 设置为 "DEBUG"。
 
 ## 许可证
 

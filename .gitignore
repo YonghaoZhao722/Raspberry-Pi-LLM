@@ -1,0 +1,29 @@
+# 配置文件
+config.py
+gemini_credentials.txt
+
+# Python相关
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.env
+
+# 模型文件（通常较大，不适合存储在git中）
+models/
+
+# 日志文件
+*.log
+
+# 操作系统相关
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 
